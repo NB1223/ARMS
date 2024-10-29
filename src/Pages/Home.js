@@ -20,7 +20,7 @@ function Home() {
   return (
     <div style={backgroundImageStyle} className='bg'>
       <div className="overlay">
-        <h1>WELCOME TO ARMS</h1>
+        <h1 className='heading'>WELCOME TO ARMS</h1>
         <p>Academic Reference Management System.</p>
         <p>Get started today.</p>
       </div>
