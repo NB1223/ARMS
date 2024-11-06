@@ -1,0 +1,70 @@
+/* Main container */
+.courses-container {
+    position: relative;
+    padding-top: 50px;
+}
+
+/* Div for Course Buttons on the left */
+.course-list {
+    position: absolute;
+    top: 30px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Styling for individual course buttons */
+.course-btn {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    text-align: center;
+}
+
+.course-btn:hover {
+    background-color: gray;
+    color: black;
+}
+
+/* Div for Topics Table in the center-right */
+.topics {
+    position: absolute;
+    top: 30px;
+    left: 200px; /* Space between the buttons and the table */
+    right: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Styling for the table */
+.table-striped {
+    width: 80%; /* Reduced width of the table */
+    margin: 20px auto; /* Centered within the container */
+    border-collapse: collapse;
+}
+
+.table-striped th, .table-striped td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px; /* Add padding for better spacing */
+}
+
+.table-striped th {
+    font-weight: bold;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2;
+}
+
+/* Centering the header text */
+.text-center {
+    text-align: center;
+}

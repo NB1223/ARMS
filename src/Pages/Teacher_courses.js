@@ -1,27 +1,20 @@
 import React, { useState } from 'react';
-import './Courses.css';
+import './Teacher_courses.css';
 
 const coursesData = {
     Math: ['Algebra', 'Geometry', 'Calculus', 'Statistics'],
     Science: ['Physics', 'Chemistry', 'Biology', 'Earth Science']
 };
 
-const Courses = () => {
+const Teacher_courses = () => {
     const [selectedCourse, setSelectedCourse] = useState(null);
-    const [readStatus, setReadStatus] = useState({});
 
     const handleCourseClick = (course) => {
         setSelectedCourse(course === selectedCourse ? null : course);
     };
 
-    const handleCheckboxChange = (course, topic) => {
-        setReadStatus((prevStatus) => ({
-            ...prevStatus,
-            [course]: {
-                ...prevStatus[course],
-                [topic]: !prevStatus[course]?.[topic]
-            }
-        }));
+    const handleUploadClick = (topic) => {
+        alert(`Upload resources for ${topic}`);
     };
 
     return (
@@ -49,7 +42,7 @@ const Courses = () => {
                                 <tr>
                                     <th>#</th>
                                     <th>Topic Name</th>
-                                    <th>Read</th>
+                                    <th>Resources</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -58,11 +51,14 @@ const Courses = () => {
                                         <td>{index + 1}</td>
                                         <td>{topic}</td>
                                         <td>
-                                            <input
-                                                type="checkbox"
-                                                checked={readStatus[selectedCourse]?.[topic] || false}
-                                                onChange={() => handleCheckboxChange(selectedCourse, topic)}
-                                            />
+                                            <div className="upload-btn-container">
+                                                <button
+                                                    className="upload-btn"
+                                                    onClick={() => handleUploadClick(topic)}
+                                                >
+                                                    Upload Resources
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -75,4 +71,4 @@ const Courses = () => {
     );
 };
 
-export default Courses;
+export default Teacher_courses;
