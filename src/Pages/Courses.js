@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Courses.css';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const coursesData = {
     Math: {
@@ -13,6 +14,13 @@ const coursesData = {
 };
 
 const Courses = () => {
+
+    const { isAuthenticated, user } = useAuth0();
+
+    // Extract the first 14 characters of the email as username
+    const username = user?.email?.substring(0, 13);
+    console.log("Username:", username);
+
     const initialCourse = Object.keys(coursesData)[0];
     const [selectedCourse, setSelectedCourse] = useState(initialCourse);
     const [selectedUnit, setSelectedUnit] = useState({ Math: 'Unit1', Science: 'Unit1' });

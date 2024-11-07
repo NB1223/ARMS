@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Teacher_courses.css';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const coursesData = {
     Math: ['Algebra', 'Geometry', 'Calculus', 'Statistics'],
@@ -7,6 +8,11 @@ const coursesData = {
 };
 
 const Teacher_courses = () => {
+
+    const { isAuthenticated, user } = useAuth0();
+    const username = user?.email?.substring(0, 13);
+    console.log("Username:", username);
+
     const [selectedCourse, setSelectedCourse] = useState(null);
 
     const handleCourseClick = (course) => {
@@ -23,9 +29,9 @@ const Teacher_courses = () => {
             <div className="course-list">
                 {Object.keys(coursesData).map((course) => (
                     <button
-                        key={course}
-                        className="course-btn"
-                        onClick={() => handleCourseClick(course)}
+                    key={course}
+                    className="course-btn"
+                    onClick={() => handleCourseClick(course)}
                     >
                         {course}
                     </button>
