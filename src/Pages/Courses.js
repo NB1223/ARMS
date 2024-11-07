@@ -2,16 +2,27 @@ import React, { useState } from 'react';
 import './Courses.css';
 
 const coursesData = {
-    Math: ['Algebra', 'Geometry', 'Calculus', 'Statistics'],
-    Science: ['Physics', 'Chemistry', 'Biology', 'Earth Science']
+    Math: {
+        Unit1: ['Algebra', 'Geometry'],
+        Unit2: ['Calculus', 'Statistics']
+    },
+    Science: {
+        Unit1: ['Physics', 'Chemistry'],
+        Unit2: ['Biology', 'Earth Science']
+    }
 };
 
 const Courses = () => {
-    const [selectedCourse, setSelectedCourse] = useState(null);
+    const initialCourse = Object.keys(coursesData)[0];
+    const [selectedCourse, setSelectedCourse] = useState(initialCourse);
+    const [selectedUnit, setSelectedUnit] = useState({ Math: 'Unit1', Science: 'Unit1' });
     const [readStatus, setReadStatus] = useState({});
 
     const handleCourseClick = (course) => {
-        setSelectedCourse(course === selectedCourse ? null : course);
+        if (selectedCourse !== course) {
+            setSelectedCourse(course);
+        }
+        // No action is taken if the course clicked is already the selected one
     };
 
     const handleCheckboxChange = (course, topic) => {
@@ -21,6 +32,13 @@ const Courses = () => {
                 ...prevStatus[course],
                 [topic]: !prevStatus[course]?.[topic]
             }
+        }));
+    };
+
+    const handleUnitChange = (course, unit) => {
+        setSelectedUnit((prevUnits) => ({
+            ...prevUnits,
+            [course]: unit
         }));
     };
 
@@ -39,11 +57,20 @@ const Courses = () => {
                 ))}
             </div>
 
-            {/* Div for Topics Table */}
+            {/* Div for Topics and Unit Buttons */}
             <div className="topics">
                 {selectedCourse && (
                     <>
-                        <h3 className="text-center">{selectedCourse} Topics</h3>
+                        <div className="unit-buttons">
+                            <button onClick={() => handleUnitChange(selectedCourse, 'Unit1')}>
+                                {selectedCourse} Unit 1
+                            </button>
+                            <button onClick={() => handleUnitChange(selectedCourse, 'Unit2')}>
+                                {selectedCourse} Unit 2
+                            </button>
+                        </div>
+
+                        <h3 className="text-center">{selectedCourse} Topics - {selectedUnit[selectedCourse]}</h3>
                         <table className="table-striped">
                             <thead>
                                 <tr>
@@ -53,12 +80,12 @@ const Courses = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {coursesData[selectedCourse].map((topic, index) => (
+                                {coursesData[selectedCourse][selectedUnit[selectedCourse]].map((topic, index) => (
                                     <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{topic}</td>
                                         <td>
-                                            <input
+                                            <input id="check"
                                                 type="checkbox"
                                                 checked={readStatus[selectedCourse]?.[topic] || false}
                                                 onChange={() => handleCheckboxChange(selectedCourse, topic)}

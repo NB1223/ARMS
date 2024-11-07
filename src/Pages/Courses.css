@@ -27,15 +27,15 @@
 }
 
 .course-btn:hover {
-    background-color: gray;
-    color: black;
+    background-color: #ccc;
+    
 }
 
-/* Div for Topics Table in the center-right */
+/* Div for Topics Section in the center-right */
 .topics {
     position: absolute;
-    top: 30px;
-    left: 200px; /* Space between the buttons and the table */
+    top: 50px;
+    left: 200px;
     right: 20px;
     background-color: #ffffff;
     padding: 20px;
@@ -43,17 +43,44 @@
     border-radius: 8px;
 }
 
+/* Unit Change Buttons Styling */
+.unit-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+/* Button styling */
+.unit-buttons button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #e0e0e0;
+    transition: background-color 0.2s;
+}
+
+.unit-buttons button:hover {
+    background-color: #ccc;
+}
+
 /* Styling for the table */
 .table-striped {
-    width: 80%; /* Reduced width of the table */
-    margin: 20px auto; /* Centered within the container */
+    width: 100%;
+    margin-top: 10px;
     border-collapse: collapse;
 }
 
 .table-striped th, .table-striped td {
     text-align: center;
     vertical-align: middle;
-    padding: 8px; /* Add padding for better spacing */
+    padding: 8px;
 }
 
 .table-striped th {
@@ -67,4 +94,31 @@
 /* Centering the header text */
 .text-center {
     text-align: center;
+}
+
+/* Style the checkbox */
+#check {
+    appearance: none; /* Removes default styling */
+    width: 16px;
+    height: 16px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Style when the checkbox is checked */
+#check:checked {
+    background-color: gray; /* Sets the color to gray */
+    border-color: gray;
+}
+
+/* Add a check mark when the checkbox is checked */
+#check:checked::after {
+    content: "✔"; /* Unicode check mark */
+    color: white;
+    font-size: 14px;
+    position: relative;
+    top: -2px;
+    left: 3px;
 }
