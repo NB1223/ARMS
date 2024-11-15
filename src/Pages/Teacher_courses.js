@@ -67,10 +67,6 @@ const TeacherCourses = () => {
                 </tbody>
             </table>
             
-            {/* Using Link for navigation */}
-            {/* <Link to= '/add_topic' className="add-topic-link" onClick={handleUploadClick}>
-                Add New Topic
-            </Link> */}
         </div>
     );
 };

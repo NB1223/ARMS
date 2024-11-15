@@ -127,20 +127,20 @@ app.post('/add-topic', (req, res) => {
 
 
 // Update read status
-// app.put('/update-status/:id', (req, res) => {
-//     const { id } = req.params;
-//     const { status } = req.body;
+app.put('/update-status/:id', (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
 
-//     const query = 'UPDATE resources SET status = ? WHERE RID = ?';
-//     db.query(query, [status, id], (err, result) => {
-//         if (err) {
-//             console.error('Error updating status:', err);
-//             res.status(500).send('Server error');
-//         } else {
-//             res.json({ message: 'Status updated successfully' });
-//         }
-//     });
-// });
+    const query = 'UPDATE resources SET status = ? WHERE RID = ?';
+    db.query(query, [status, id], (err, result) => {
+        if (err) {
+            console.error('Error updating status:', err);
+            res.status(500).send('Server error');
+        } else {
+            res.json({ message: 'Status updated successfully' });
+        }
+    });
+});
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
