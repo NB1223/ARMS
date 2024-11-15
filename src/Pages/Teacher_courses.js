@@ -107,7 +107,14 @@ const TeacherCourses = () => {
                                     {topic.link ? 'Update Link' : 'Upload Link'}
                                 </button>
                             </td>
-                            <td>{topic.link || 'No link available'}</td>
+                            <td>{topic.link ? (
+                                <a href={topic.link} target="_blank" rel="noopener noreferrer">
+                                {topic.Title}
+                                </a>
+                            ) : (
+                                'No link available'
+                            )}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
