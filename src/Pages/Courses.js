@@ -1,111 +1,90 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Courses.css';
-import { useAuth0 } from '@auth0/auth0-react';
-
-const coursesData = {
-    Math: {
-        Unit1: ['Algebra', 'Geometry'],
-        Unit2: ['Calculus', 'Statistics']
-    },
-    Science: {
-        Unit1: ['Physics', 'Chemistry'],
-        Unit2: ['Biology', 'Earth Science']
-    }
-};
 
 const Courses = () => {
+    const [selectedCourse, setSelectedCourse] = useState('');
+    const [selectedUnit, setSelectedUnit] = useState('');
+    const [topics, setTopics] = useState([]);
 
-    const { isAuthenticated, user } = useAuth0();
-
-    // Extract the first 14 characters of the email as username
-    const username = user?.email?.substring(0, 13);
-    console.log("Username:", username);
-
-    const initialCourse = Object.keys(coursesData)[0];
-    const [selectedCourse, setSelectedCourse] = useState(initialCourse);
-    const [selectedUnit, setSelectedUnit] = useState({ Math: 'Unit1', Science: 'Unit1' });
-    const [readStatus, setReadStatus] = useState({});
-
-    const handleCourseClick = (course) => {
-        if (selectedCourse !== course) {
-            setSelectedCourse(course);
+    // Fetch topics based on selected course and unit
+    useEffect(() => {
+        let url = 'http://localhost:5000/topics';
+        
+        // Only add query parameters if they are selected
+        if (selectedCourse) {
+            url += `?course=${selectedCourse}`;
         }
-        // No action is taken if the course clicked is already the selected one
-    };
+        if (selectedUnit) {
+            url += selectedCourse ? `&unit=${selectedUnit}` : `?unit=${selectedUnit}`;
+        }
 
-    const handleCheckboxChange = (course, topic) => {
-        setReadStatus((prevStatus) => ({
-            ...prevStatus,
-            [course]: {
-                ...prevStatus[course],
-                [topic]: !prevStatus[course]?.[topic]
-            }
-        }));
-    };
+        fetch(url)
+            .then(res => res.json())
+            .then(data => setTopics(data))
+            .catch(err => console.error('Error fetching topics:', err));
+    }, [selectedCourse, selectedUnit]);
 
-    const handleUnitChange = (course, unit) => {
-        setSelectedUnit((prevUnits) => ({
-            ...prevUnits,
-            [course]: unit
-        }));
+    // Handle read status change
+    const handleCheckboxChange = (id, currentStatus) => {
+        const newStatus = !currentStatus;
+        fetch(`http://localhost:5000/update-status/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        })
+        .then(() => {
+            setTopics(topics.map(topic => topic.RID === id ? { ...topic, status: newStatus } : topic));
+        })
+        .catch(err => console.error('Error updating status:', err));
     };
 
     return (
         <div className="courses-container">
-            {/* Div for Course Buttons */}
-            <div className="course-list">
-                {Object.keys(coursesData).map((course) => (
-                    <button
-                        key={course}
-                        className="course-btn"
-                        onClick={() => handleCourseClick(course)}
-                    >
-                        {course}
-                    </button>
-                ))}
+            {/* Course selection buttons */}
+            <div className="course-selection">
+                <button onClick={() => setSelectedCourse('SE')}>Software Engineering</button>
+                <button onClick={() => setSelectedCourse('DBMS')}>Database Management Systems</button>
+                <button onClick={() => { setSelectedCourse(''); setSelectedUnit(''); }}>Clear Course</button>
             </div>
 
-            {/* Div for Topics and Unit Buttons */}
-            <div className="topics">
-                {selectedCourse && (
-                    <>
-                        <div className="unit-buttons">
-                            <button onClick={() => handleUnitChange(selectedCourse, 'Unit1')}>
-                                {selectedCourse} Unit 1
-                            </button>
-                            <button onClick={() => handleUnitChange(selectedCourse, 'Unit2')}>
-                                {selectedCourse} Unit 2
-                            </button>
-                        </div>
-
-                        <h3 className="text-center">{selectedCourse} Topics - {selectedUnit[selectedCourse]}</h3>
-                        <table className="table-striped">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Topic Name</th>
-                                    <th>Read</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {coursesData[selectedCourse][selectedUnit[selectedCourse]].map((topic, index) => (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{topic}</td>
-                                        <td>
-                                            <input id="check"
-                                                type="checkbox"
-                                                checked={readStatus[selectedCourse]?.[topic] || false}
-                                                onChange={() => handleCheckboxChange(selectedCourse, topic)}
-                                            />
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </>
-                )}
+            {/* Unit selection buttons */}
+            <div className="unit-buttons">
+                <button onClick={() => setSelectedUnit('1')}>Unit 1</button>
+                <button onClick={() => setSelectedUnit('2')}>Unit 2</button>
             </div>
+
+            {/* Display resources */}
+            <h3>{selectedCourse ? `${selectedCourse} Topics` : 'All Courses'} - Unit {selectedUnit || 'All Units'}</h3>
+            <table className="table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Views</th>
+                        <th>Read</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {topics.map((topic, index) => (
+                        <tr key={topic.RID}>
+                            <td>{index + 1}</td>
+                            <td>{topic.Title}</td>
+                            <td>{topic.Descriptions}</td>
+                            <td>{topic.resource_type}</td>
+                            <td>{topic.view_count}</td>
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    checked={topic.status}
+                                    onChange={() => handleCheckboxChange(topic.RID, topic.status)}
+                                />
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };

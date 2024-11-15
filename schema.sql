@@ -12,9 +12,11 @@ CREATE TABLE IF NOT EXISTS student (
 
 CREATE TABLE IF NOT EXISTS resources (
     RID INT PRIMARY KEY,
+    course VARCHAR(40) NOT NULL,
     Title VARCHAR(30) NOT NULL UNIQUE,
     Descriptions VARCHAR(30) NOT NULL,
     resource_type VARCHAR(20) NOT NULL,
+    unit INT NOT NULL,
     view_count INT NOT NULL
 );
 

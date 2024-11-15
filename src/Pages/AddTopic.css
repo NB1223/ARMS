@@ -1,0 +1,86 @@
+/* AddTopic.css */
+
+.add-topic-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    padding: 20px;
+}
+
+.add-topic-container h2 {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.add-topic-form {
+    background-color: #f5f7fa;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.add-topic-form input,
+.add-topic-form textarea,
+.add-topic-form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.add-topic-form input:focus,
+.add-topic-form textarea:focus,
+.add-topic-form select:focus {
+    border-color: #2575fc;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(37, 117, 252, 0.2);
+}
+
+.add-topic-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.add-topic-form button {
+    background-color: #6a11cb;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-topic-form button:hover {
+    background-color: #2575fc;
+    box-shadow: 0 6px 12px rgba(37, 117, 252, 0.2);
+}
+
+.add-topic-form button:active {
+    transform: translateY(2px);
+}
+
+.add-topic-form button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .add-topic-form {
+        padding: 20px;
+    }
+}
