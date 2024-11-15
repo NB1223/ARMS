@@ -41,9 +41,6 @@ app.get('/topics', (req, res) => {
         query += ' WHERE unit = ?';
         queryParams.push(unit);
     }
-    // else{
-    //     queryParams.push('')
-    // }
 
     db.query(query, queryParams, (err, results) => {
         if (err) {
@@ -122,10 +119,6 @@ app.post('/add-topic', (req, res) => {
 });
 
 
-
-
-
-
 // Update read status
 app.put('/update-status/:id', (req, res) => {
     const { id } = req.params;
@@ -141,6 +134,53 @@ app.put('/update-status/:id', (req, res) => {
         }
     });
 });
+
+app.post('/upload-resource', (req, res) => {
+    const { rid, link } = req.body;
+
+    if (!link) {
+        return res.status(400).send('Link is required');
+    }
+
+    const query = 'UPDATE resources SET link = ? WHERE RID = ?';
+    db.query(query, [link, rid], (err, result) => {
+        if (err) {
+            console.error('Error uploading link:', err);
+            return res.status(500).send('Server error');
+        }
+        res.send('Link uploaded successfully');
+    });
+});
+
+app.post('/add-link', (req, res) => {
+    const { rid, link } = req.body;
+    const query = 'UPDATE resources SET link = ? WHERE RID = ?';
+    
+    db.query(query, [link, rid], (err, result) => {
+        if (err) {
+            console.error('Error adding link:', err);
+            return res.status(500).send('Server error');
+        }
+        res.status(200).json({ message: 'Link added successfully' });
+    });
+});
+
+
+app.put('/update-link/:id', (req, res) => {
+    const { id } = req.params;
+    const { link } = req.body;
+
+    const query = 'UPDATE resources SET link = ? WHERE RID = ?';
+    db.query(query, [link, id], (err, result) => {
+        if (err) {
+            console.error('Error updating link:', err);
+            res.status(500).send('Server error');
+        } else {
+            res.json({ message: 'Link updated successfully' });
+        }
+    });
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
