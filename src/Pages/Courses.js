@@ -58,7 +58,7 @@ const Courses = () => {
             <table className="table-striped">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>ID</th>
                         <th>Title</th>
                         <th>Description</th>
                         <th>Type</th>
