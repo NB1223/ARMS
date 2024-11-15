@@ -5,6 +5,7 @@ import Home from './Pages/Home.js';
 import Courses from './Pages/Courses.js';
 import Teacher_courses from './Pages/Teacher_courses.js';
 import NavbarComponent from './Components/NavBar.js';
+// import AddTopic from './Pages/AddTopic.js';
 
 function App() {
   const { isAuthenticated, user } = useAuth0();
@@ -39,6 +40,7 @@ function App() {
             path="/teacher_courses"
             element={isAuthenticated ? <Teacher_courses /> : <Navigate to="/" />}
           />
+          {/* <Route path='/add_topic' element={<AddTopic/>} ></Route> */}
         </Routes>
       </Router>
     </div>
