@@ -10,7 +10,7 @@ import NavbarComponent from './Components/NavBar.js';
 function App() {
   const { isAuthenticated, user } = useAuth0();
   const username = user?.email?.substring(0, 13);
-  const studentPattern = /^pes[12]202[23][0-9]{4}[1-9]$/;
+  const studentPattern = /^pes[12]202[23][0-9]{5}$/;
 
   return (
     <div className='app-div'>
