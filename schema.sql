@@ -86,3 +86,22 @@ CREATE TABLE IF NOT EXISTS tag (
     FOREIGN KEY (RID) REFERENCES under(RID),
     FOREIGN KEY (CID) REFERENCES course(CID)
 );
+
+-- Add the 'access_timestamp' column
+
+-- use arms;
+
+-- ALTER TABLE accesses
+-- ADD COLUMN access_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- Add the 'read_status' column
+-- ALTER TABLE accesses
+-- ADD COLUMN read_status BOOLEAN DEFAULT FALSE;
+
+-- ALTER TABLE student
+-- DROP COLUMN S_Password;
+
+-- INSERT INTO student (SRN, Student_Name, Department, Semester)
+-- VALUES
+-- ('PES1202201196', 'Neha Bhaskar', 'CSE', 5);
+

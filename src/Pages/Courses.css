@@ -1,8 +1,45 @@
 /* Main container */
 .courses-container {
     position: relative;
-    padding-top: 50px;
+    /* align-items: center; */
+    /* padding-top: 50px; */
 }
+
+.part1,.part2 {
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+    justify-content: space-between; /* Distribute content equally */
+    /* gap: 20px; Add some space between elements */
+    padding: 5px;
+    background-color: #f4f4f4; /* Optional background color */
+    border-radius: 5px;
+    max-width: 1300px; /* Optional: to limit width */
+    margin: auto; /* Center the content */
+    font-family: Raleway;
+    flex-wrap: wrap; /* Allow items to wrap if needed */
+}
+
+.hi {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.dept, .sem, .srn {
+    font-size: 16px;
+    color: #555; /* Lighter gray for contrast */
+}
+.sem, .srn {
+    margin-top: -10px;
+    font-size: 15px;
+    color: #414040; /* Lighter gray for contrast */
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+p {
+    margin: 0; /* Remove default margin for uniformity */
+}
+
+
 
 /* Div for Course Buttons on the left */
 .course-list {
@@ -24,6 +61,7 @@
     cursor: pointer;
     transition: background-color 0.2s, color 0.2s;
     text-align: center;
+
 }
 
 .course-btn:hover {
@@ -44,6 +82,16 @@
 
 /* Unit Change Buttons Styling */
 .unit-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+.course-selection {
     display: flex;
     justify-content: center;
     gap: 10px;
@@ -74,6 +122,7 @@
     width: 100%;
     margin-top: 10px;
     border-collapse: collapse;
+    /* padding: 50px; */
 }
 
 .table-striped th, .table-striped td {

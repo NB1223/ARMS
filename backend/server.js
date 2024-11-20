@@ -80,6 +80,26 @@ app.get('/teacher_courses', (req, res) => {
     });
 });
 
+app.get('/student/:srn', (req, res) => {
+    const srn = req.params.srn;
+    
+    // Query to fetch student details from the database
+    const query = 'SELECT * FROM student WHERE SRN = ?';
+    db.query(query, [srn], (err, result) => {
+        if (err) {
+            console.error('Error fetching student details:', err);
+            return res.status(500).json({ message: 'Server error' });
+        }
+        
+        if (result.length === 0) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+
+        // Send student details back in response
+        res.json(result[0]);
+    });
+});
+
 app.post('/add-topic', (req, res) => {
     const { rid, title, description, course, unit, resourceType } = req.body;
 
@@ -180,6 +200,8 @@ app.put('/update-link/:id', (req, res) => {
         }
     });
 });
+
+
 
 
 app.listen(PORT, () => {
