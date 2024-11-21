@@ -106,7 +106,7 @@ app.put('/update-status/:id', (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    const query = 'UPDATE accesses SET read_status = ? WHERE RID = ? and srn=?';
+    const query = 'UPDATE accesses SET read_status = ? WHERE RID = ? ';
     db.query(query, [status, id], (err, result) => {
         if (err) {
             console.error('Error updating status:', err);

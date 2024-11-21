@@ -99,7 +99,7 @@ const Courses = () => {
                             <th>Title</th>
                             <th>Description</th>
                             <th>Type</th>
-                            <th>Views</th>
+                            <th>Links</th>
                             <th>Read</th>
                         </tr>
                     </thead>
@@ -110,7 +110,7 @@ const Courses = () => {
                                 <td>{topic.Title}</td>
                                 <td>{topic.Descriptions}</td>
                                 <td>{topic.resource_type}</td>
-                                <td>{topic.view_count}</td>
+                                <td><a href={topic.link} target="_blank">{topic.Title}</a></td>
                                 <td>
                                     <input
                                         type="checkbox"
