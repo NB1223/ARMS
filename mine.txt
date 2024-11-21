@@ -1,0 +1,209 @@
+INSERT INTO accesses (SRN, RID, access_timestamp, read_status, view_count)
+VALUES
+('PES120223001', 1, '2024-11-20 15:00:00', 1, 151),
+('PES120223002', 2, '2024-11-20 15:15:00', 0, 201),
+('PES120223003', 3, '2024-11-20 15:30:00', 1, 351),
+('PES1202201196', 4, '2024-11-20 15:45:00', 0, 121),
+('PES1202201230', 5, '2024-11-20 16:00:00', 1, 221);
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER adjust_view_count_in_resources
+AFTER UPDATE ON accesses
+FOR EACH ROW
+BEGIN
+    -- Increment view_count in resources if read_status changes from 0 to 1
+    IF NEW.read_status = 1 AND OLD.read_status = 0 THEN
+        UPDATE resources
+        SET view_count = view_count + 1
+        WHERE RID = NEW.RID;
+    END IF;
+
+    -- Decrement view_count in resources if read_status changes from 1 to 0
+    IF NEW.read_status = 0 AND OLD.read_status = 1 THEN
+        UPDATE resources
+        SET view_count = view_count - 1
+        WHERE RID = NEW.RID;
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+SELECT * 
+FROM INFORMATION_SCHEMA.TRIGGERS 
+WHERE TABLE_NAME = 'accesses';
+
+
+
+DELIMITER $$
+
+CREATE FUNCTION handle_access(rid INT, srn VARCHAR(15))
+RETURNS VARCHAR(255)
+DETERMINISTIC
+BEGIN
+    DECLARE record_exists INT;
+    
+    -- Check if the record exists
+    SELECT COUNT(*) INTO record_exists
+    FROM accesses
+    WHERE RID = rid AND SRN = srn;
+
+    -- If the record exists, update it
+    IF record_exists > 0 THEN
+        UPDATE accesses
+        SET read_status = 1, 
+            access_timestamp = CURRENT_TIMESTAMP
+        WHERE RID = rid AND SRN = srn;
+
+        -- Update the view count in the resources table
+        UPDATE resources
+        SET view_count = view_count + 1
+        WHERE RID = rid;
+
+        RETURN 'Record updated successfully';
+    ELSE
+        -- If the record does not exist, insert it
+        INSERT INTO accesses (SRN, RID, access_timestamp, read_status, view_count)
+        VALUES (srn, rid, CURRENT_TIMESTAMP, 1, 1);
+
+        -- Update the view count in the resources table
+        UPDATE resources
+        SET view_count = view_count + 1
+        WHERE RID = rid;
+
+        RETURN 'Record inserted and updated successfully';
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE manage_access_record(IN rid INT, IN srn VARCHAR(15), IN read_status TINYINT)
+BEGIN
+    DECLARE record_exists INT;
+
+    -- Check if the record exists in the accesses table
+    SELECT COUNT(*) INTO record_exists
+    FROM accesses
+    WHERE RID = rid AND SRN = srn;
+
+    -- If the record exists, update the read_status
+    IF record_exists > 0 THEN
+        UPDATE accesses
+        SET read_status = read_status, access_timestamp = NOW()
+        WHERE RID = rid AND SRN = srn;
+
+    -- If the record does not exist, create a new one
+    ELSE
+        INSERT INTO accesses (SRN, RID, access_timestamp, read_status, view_count)
+        VALUES (srn, rid, NOW(), read_status, 0);
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+SHOW PROCEDURE STATUS WHERE Db = 'arms';
+
+ SRN           | RID | access_timestamp    | read_status | view_count
+
+DELIMITER $$
+
+CREATE TRIGGER UpdateOrInsertAccessAndViewCount
+AFTER UPDATE ON accesses
+FOR EACH ROW
+BEGIN
+    -- Check if the read_status is being changed (if it's different from the old value)
+    IF OLD.read_status != NEW.read_status THEN
+        -- If the record exists, update the view count
+        UPDATE resources
+        SET view_count = view_count + 1
+        WHERE RID = NEW.rid;
+    END IF;
+
+    -- If the record does not exist in accesses table, insert a new one
+    IF NOT EXISTS (SELECT 1 FROM accesses WHERE rid = NEW.rid AND srn = NEW.srn) THEN
+        -- Insert a new record with read_status and the timestamp
+        INSERT INTO accesses (rid, srn, read_status, access_time)
+        VALUES (NEW.rid, NEW.srn, NEW.read_status, NOW());
+        
+        -- Update the view count in the resources table
+        UPDATE resources
+        SET view_count = view_count + 1
+        WHERE RID = NEW.rid;
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER ManageAccessAndViewCount
+BEFORE UPDATE ON accesses
+FOR EACH ROW
+BEGIN
+    -- Check if the record already exists
+    IF NOT EXISTS (SELECT 1 FROM accesses WHERE rid = NEW.rid AND srn = NEW.srn) THEN
+        -- Insert a new record since it doesn't exist
+        INSERT INTO accesses (rid, srn, read_status, access_time)
+        VALUES (NEW.rid, NEW.srn, NEW.read_status, NOW());
+        
+        -- Update the view count in the resources table
+        UPDATE resources
+        SET view_count = view_count + 1
+        WHERE RID = NEW.rid;
+    ELSE
+        -- If the record exists and read_status changes, update the view count
+        IF OLD.read_status != NEW.read_status THEN
+            UPDATE resources
+            SET view_count = view_count + 1
+            WHERE RID = NEW.rid;
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+INSERT INTO accesses (SRN, RID, access_timestamp, read_status)
+VALUES
+('PES1202201196', 6, '2024-11-21 10:07:00', 1),
+('PES1202201196', 7, '2024-11-21 10:08:00', 0),
+('PES1202201196', 8, '2024-11-21 10:09:00', 1),
+('PES1202201230', 9, '2024-11-21 10:10:00', 1),
+('PES1202201230', 10, '2024-11-21 10:11:00', 0),
+('PES1202201230', 2, '2024-11-21 10:12:00', 1);
+
+
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER adjust_view_count_in_resources
+AFTER UPDATE ON accesses
+FOR EACH ROW
+BEGIN
+    -- Increment view_count in resources if read_status changes from 0 to 1
+    IF NEW.read_status = 1 AND OLD.read_status = 0 THEN
+        UPDATE resources
+        SET view_count = view_count + 1
+        WHERE RID = NEW.RID;
+    END IF;
+
+    -- Decrement view_count in resources if read_status changes from 1 to 0
+    IF NEW.read_status = 0 AND OLD.read_status = 1 THEN
+        UPDATE resources
+        SET view_count = view_count - 1
+        WHERE RID = NEW.RID;
+    END IF;
+END$$
+
+DELIMITER ;
