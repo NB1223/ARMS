@@ -60,14 +60,12 @@ const CreateResource = () => {
                 </div>
                 <div>
                     <label>Course:</label>
-                    <select
+                    <input
+                        type="text"
                         value={course}
-                        onChange={(e) => setResourceType(e.target.value)}
-                        required>
-                        <option value="">Select Course</option>
-                        <option value="DBMS">DBMS</option>
-                        <option value="SE">SE</option>
-                    </select>
+                        onChange={(e) => setCourse(e.target.value)}
+                        required
+                    />
                 </div>
                 <div>
                     <label>Unit:</label>
@@ -78,7 +76,6 @@ const CreateResource = () => {
                         required
                     />
                 </div>
-                
                 <div>
                     <label>Title:</label>
                     <input

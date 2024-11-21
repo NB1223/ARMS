@@ -238,10 +238,10 @@ app.get('/resources', (req, res) => {
 app.get('/course-unit-views', (req, res) => {
     const { course } = req.query;
 
-    if (!course) {
-        console.error('Course name is missing in the query parameters.');
-        return res.status(400).json({ error: 'Course name is required' });
-    }
+    // if (!course) {
+    //     console.error('Course name is missing in the query parameters.');
+    //     return res.status(400).json({ error: 'Course name is required' });
+    // }
 
     const query = 'CALL GetUnitViewsByCourse(?)';
 
