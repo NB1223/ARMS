@@ -15,6 +15,10 @@
     font-family: Raleway;
 }
 
+.view_count{
+    margin-top: 50px;
+}
+
 /* Course buttons section */
 .course-buttons-list {
     display: flex;

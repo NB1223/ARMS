@@ -12,6 +12,7 @@ const TeacherCourses = () => {
     const [link, setLink] = useState('');
     const [resources, setResources] = useState([]);
     const [selectedRID, setSelectedRID] = useState('');
+    const [unitViews, setUnitViews] = useState([]);
 
     const { isAuthenticated, user } = useAuth0();
     const navigate = useNavigate();
@@ -35,7 +36,8 @@ const TeacherCourses = () => {
                 .catch((err) => console.error('Error fetching topics:', err));  // Error handling
         }
     }, [isAuthenticated, user, selectedCourse, selectedUnit]);
-
+    
+    const courseName = [...new Set(topics.map(topic => topic.course))];
     useEffect(() => {
         // Fetch all resources from the backend to populate the dropdown
         fetch('http://localhost:5000/resources')  // Adjust the URL if needed
@@ -43,6 +45,29 @@ const TeacherCourses = () => {
             .then((data) => setResources(data))
             .catch((error) => console.error('Error fetching resources:', error));
     }, []);
+
+    useEffect(() => {
+        const fetchUnitViews = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/course-unit-views?course=${courseName}`);
+                
+                // Check if the response is ok (status 200-299)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+    
+                const data = await response.json();
+                setUnitViews(data);
+            } catch (error) {
+                console.error('Error fetching unit views:', error);
+            }
+        };
+    
+        if (courseName) {
+            fetchUnitViews();
+        }
+    }, [courseName]);
+    
 
     const handleDelete = () => {
         if (!selectedRID) {
@@ -118,7 +143,6 @@ const TeacherCourses = () => {
 
     
 
-    const courseName = [...new Set(topics.map(topic => topic.course))];
     // console.log("------------",courseNames)
 
     const courseMap = {
@@ -157,6 +181,7 @@ const TeacherCourses = () => {
             </div>
 
             {/* <h3>{courseNames} - {selectedUnit}</h3> */}
+
             
             {/* Topics table */}
             <table className="table-striped">
@@ -219,6 +244,28 @@ const TeacherCourses = () => {
                     </form>
                 </div>
             )}
+
+            <div className="unit-views-container">
+                <h3 className='view_count'>Total Views Per Unit for {selectedCourse}</h3>
+                <table className="table-striped">
+                    <thead>
+                        <tr>
+                            <th>Unit</th>
+                            <th>Total Views</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {unitViews.map((unit) => (
+                            <tr key={unit.unit}>
+                                <td>{unit.unit}</td>
+                                <td>{unit.total_views}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+
         </div>
     );
 };

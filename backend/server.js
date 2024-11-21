@@ -234,6 +234,30 @@ app.get('/resources', (req, res) => {
 });
 
 
+// Fetch total views per unit for a given course using stored procedure
+app.get('/course-unit-views', (req, res) => {
+    const { course } = req.query;
+
+    if (!course) {
+        console.error('Course name is missing in the query parameters.');
+        return res.status(400).json({ error: 'Course name is required' });
+    }
+
+    const query = 'CALL GetUnitViewsByCourse(?)';
+
+    db.query(query, [course], (err, results) => {
+        if (err) {
+            console.error('Error fetching total views per unit:', err);
+            return res.status(500).json({ error: 'Server error' });
+        }
+
+        // console.log('Database query results:', results);
+
+        // Send the first result set, as stored procedures return an array of arrays
+        res.json(results[0] || []); 
+    });
+});
+
 
 
 

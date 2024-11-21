@@ -60,12 +60,14 @@ const CreateResource = () => {
                 </div>
                 <div>
                     <label>Course:</label>
-                    <input
-                        type="text"
+                    <select
                         value={course}
-                        onChange={(e) => setCourse(e.target.value)}
-                        required
-                    />
+                        onChange={(e) => setResourceType(e.target.value)}
+                        required>
+                        <option value="">Select Course</option>
+                        <option value="DBMS">DBMS</option>
+                        <option value="SE">SE</option>
+                    </select>
                 </div>
                 <div>
                     <label>Unit:</label>
@@ -76,6 +78,7 @@ const CreateResource = () => {
                         required
                     />
                 </div>
+                
                 <div>
                     <label>Title:</label>
                     <input
@@ -96,13 +99,19 @@ const CreateResource = () => {
                 </div>
                 <div>
                     <label>Resource Type:</label>
-                    <input
-                        type="text"
+                    <select
                         value={resourceType}
                         onChange={(e) => setResourceType(e.target.value)}
-                        required
-                    />
+                        required>
+                        <option value="">Select Resource Type</option>
+                        <option value="Paper">Paper</option>
+                        <option value="Article">Article</option>
+                        <option value="Video">Video</option>
+                        <option value="Slides">Slides</option>
+                        <option value="Textbook">Textbook</option>
+                    </select>
                 </div>
+
 
                 <button type="submit">Submit</button>
                 <button type="button" onClick={() => navigate('/teacher_courses')}>Cancel</button>
