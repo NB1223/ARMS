@@ -5,6 +5,7 @@ import Home from './Pages/Home.js';
 import Courses from './Pages/Courses.js';
 import Teacher_courses from './Pages/Teacher_courses.js';
 import NavbarComponent from './Components/NavBar.js';
+import CreateResource from './Pages/CreateResource.js';
 // import AddTopic from './Pages/AddTopic.js';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         {isAuthenticated && <NavbarComponent />}
 
         <Routes>
+          <Route path="/create-resource" element={<CreateResource />} />
           <Route
             path="/"
             element={

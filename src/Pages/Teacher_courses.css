@@ -8,6 +8,13 @@
     background-color: #f4f4f4;
 }
 
+.handle_resource{
+
+    /* margin-top: 0px; */
+    padding: 5px;
+    font-family: Raleway;
+}
+
 /* Course buttons section */
 .course-buttons-list {
     display: flex;
@@ -29,6 +36,11 @@
 
 .course-button:hover {
     background-color: #ccc;
+}
+
+.course_name{
+    font-size: xx-large;
+    background-color: #f0f0f000;
 }
 
 /* Unit buttons section */
@@ -75,23 +87,24 @@
 }
 
 /* Styling for the topics table */
-.striped-table {
+.table-striped {
+    margin-top: 40px;
     width: 100%;
     border-collapse: collapse;
 }
 
-.striped-table th, .striped-table td {
+.table-striped th, .table-striped td {
     text-align: left;
     padding: 12px;
     border-bottom: 1px solid #ddd;
 }
 
-.striped-table th {
+.table-striped th {
     font-weight: bold;
     background-color: #f7f7f7;
 }
 
-.striped-table tbody tr:nth-of-type(odd) {
+.table-striped tbody tr:nth-of-type(odd) {
     background-color: #f2f2f2;
 }
 
@@ -113,4 +126,12 @@
 
 .upload-button:hover {
     background-color: #0056b3;
+}
+
+.delete_resource{
+    margin-top: 20px;
+    align-items: center;
+    /* padding: 10px; */
+    font-family: Raleway;
+    /* font-size: medium; */
 }

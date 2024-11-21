@@ -168,10 +168,10 @@ app.get('/teacher_courses', (req, res) => {
             r.view_count, 
             r.link,
             c.course_name
-        FROM professor p
-        JOIN course c ON p.PID = c.PID
-        JOIN resources r ON c.course_name = r.course
-        WHERE p.Email = ?;
+        FROM resources r
+        JOIN course c ON c.course_name = r.course
+        WHERE c.PID = (SELECT PID FROM professor WHERE Email = ?) ORDER BY r.unit;
+
     `;
 
     db.query(query, [email], (err, results) => {
@@ -180,6 +180,56 @@ app.get('/teacher_courses', (req, res) => {
             return res.status(500).send('Server error');
         }
         res.json(results); // Send the filtered topics to the frontend
+    });
+});
+
+// Create a new resource
+
+app.post('/create-resource', (req, res) => {
+    const { rid, course, unit, title, description, resource_type, view_count } = req.body;
+    console.log(req.body)
+
+    const query = `
+        INSERT INTO resources (rid, course, unit, Title, Descriptions, resource_type, view_count)
+        VALUES (?, ?, ?, ?, ?, ?, ?);
+    `;
+
+    db.query(query, [rid, course, unit, title, description, resource_type, view_count], (err, result) => {
+        if (err) {
+            console.error('Error creating resource:', err);
+            return res.status(500).send('Server error');
+        }
+        res.status(201).send('Resource created successfully');
+    });
+});
+
+// Delete a resource
+app.delete('/delete-resource/:id', (req, res) => {
+    const { id } = req.params;  // The id is passed in the URL to specify which resource to delete
+
+    const query = 'DELETE FROM resources WHERE RID = ?';
+    db.query(query, [id], (err, result) => {
+        if (err) {
+            console.error('Error deleting resource:', err);
+            return res.status(500).send('Server error');
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).send('Resource not found');
+        }
+        res.send('Resource deleted successfully');
+    });
+});
+
+
+// Fetch all resources
+app.get('/resources', (req, res) => {
+    const query = 'SELECT * FROM resources';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error fetching resources:', err);
+            return res.status(500).send('Server error');
+        }
+        res.json(results);  // Send the list of resources
     });
 });
 
