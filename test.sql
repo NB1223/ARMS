@@ -64,6 +64,14 @@ use arms;
 -- ADD PID INT,
 -- ADD FOREIGN KEY (PID) REFERENCES professor(PID);
 
+-- UPDATE course
+-- SET PID = 101 WHERE CID = 2;
+-- UPDATE course
+-- SET PID = 102 WHERE CID = 1;
+
+-- desc resources; 
+
+
 
 
 
