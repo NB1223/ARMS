@@ -52,33 +52,33 @@ app.get('/topics', (req, res) => {
     });
 });
 
-app.get('/teacher_courses', (req, res) => {
-    const { course, unit } = req.query;
+// app.get('/teacher_courses', (req, res) => {
+//     const { course, unit } = req.query;
     
-    // Base query
-    let query = 'SELECT * FROM resources';
-    const queryParams = [];
+//     // Base query
+//     let query = 'SELECT * FROM resources';
+//     const queryParams = [];
 
-    // Add conditions based on course and unit
-    if (course && unit) {
-        query += ' WHERE course = ? AND unit = ?';
-        queryParams.push(course, unit);
-    } else if (course) {
-        query += ' WHERE course = ?';
-        queryParams.push(course);
-    } else if (unit) {
-        query += ' WHERE unit = ?';
-        queryParams.push(unit);
-    }
+//     // Add conditions based on course and unit
+//     if (course && unit) {
+//         query += ' WHERE course = ? AND unit = ?';
+//         queryParams.push(course, unit);
+//     } else if (course) {
+//         query += ' WHERE course = ?';
+//         queryParams.push(course);
+//     } else if (unit) {
+//         query += ' WHERE unit = ?';
+//         queryParams.push(unit);
+//     }
 
-    db.query(query, queryParams, (err, results) => {
-        if (err) {
-            console.error('Error fetching topics:', err);
-            return res.status(500).send('Server error');
-        }
-        res.json(results);  // Send the topics data back as JSON
-    });
-});
+//     db.query(query, queryParams, (err, results) => {
+//         if (err) {
+//             console.error('Error fetching topics:', err);
+//             return res.status(500).send('Server error');
+//         }
+//         res.json(results);  // Send the topics data back as JSON
+//     });
+// });
 
 app.get('/student/:srn', (req, res) => {
     const srn = req.params.srn;
@@ -97,44 +97,6 @@ app.get('/student/:srn', (req, res) => {
 
         // Send student details back in response
         res.json(result[0]);
-    });
-});
-
-app.post('/add-topic', (req, res) => {
-    const { rid, title, description, course, unit, resourceType } = req.body;
-
-    // Check if RID is unique
-    const checkQuery = 'SELECT * FROM resources WHERE RID = ?';
-    db.query(checkQuery, [rid], (err, result) => {
-        if (err) {
-            console.error('Error checking RID:', err);
-            return res.status(500).send('Server error');
-        }
-
-        // If RID exists, return an error message
-        if (result.length > 0) {
-            return res.status(400).json({ error: 'RID must be unique' });
-        }
-
-        // If RID is unique, insert new topic
-        const query = 'INSERT INTO resources (RID, Title, Descriptions, course, unit, resource_type) VALUES (?, ?, ?, ?, ?, ?)';
-        db.query(query, [rid, title, description, course, unit, resourceType], (err, result) => {
-            if (err) {
-                console.error('Error adding new topic:', err);
-                return res.status(500).send('Server error');
-            }
-
-            // Respond with the newly added topic
-            res.status(201).json({
-                RID: rid,
-                Title: title,
-                Descriptions: description,
-                course: course,
-                unit: unit,
-                resource_type: resourceType,
-                status: false // default status
-            });
-        });
     });
 });
 
@@ -172,19 +134,6 @@ app.post('/upload-resource', (req, res) => {
     });
 });
 
-app.post('/add-link', (req, res) => {
-    const { rid, link } = req.body;
-    const query = 'UPDATE resources SET link = ? WHERE RID = ?';
-    
-    db.query(query, [link, rid], (err, result) => {
-        if (err) {
-            console.error('Error adding link:', err);
-            return res.status(500).send('Server error');
-        }
-        res.status(200).json({ message: 'Link added successfully' });
-    });
-});
-
 
 app.put('/update-link/:id', (req, res) => {
     const { id } = req.params;
@@ -200,6 +149,40 @@ app.put('/update-link/:id', (req, res) => {
         }
     });
 });
+
+app.get('/teacher_courses', (req, res) => {
+    const { email } = req.query; // Assuming the email of the professor is passed in the query
+
+    if (!email) {
+        return res.status(400).send('Email is required');
+    }
+
+    const query = `
+        SELECT 
+            r.RID, 
+            r.course,
+            r.Title, 
+            r.Descriptions, 
+            r.resource_type, 
+            r.unit, 
+            r.view_count, 
+            r.link,
+            c.course_name
+        FROM professor p
+        JOIN course c ON p.PID = c.PID
+        JOIN resources r ON c.course_name = r.course
+        WHERE p.Email = ?;
+    `;
+
+    db.query(query, [email], (err, results) => {
+        if (err) {
+            console.error('Error fetching courses:', err);
+            return res.status(500).send('Server error');
+        }
+        res.json(results); // Send the filtered topics to the frontend
+    });
+});
+
 
 
 
